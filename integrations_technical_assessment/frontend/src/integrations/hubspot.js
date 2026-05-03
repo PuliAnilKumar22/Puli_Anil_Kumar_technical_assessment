@@ -1,4 +1,4 @@
-// airtable.js
+// hubspot.js
 
 import { useState, useEffect } from 'react';
 import {
@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 
-export const AirtableIntegration = ({ user, org, integrationParams, setIntegrationParams }) => {
+export const HubspotIntegration = ({ user, org, integrationParams, setIntegrationParams }) => {
     const [isConnected, setIsConnected] = useState(false);
     const [isConnecting, setIsConnecting] = useState(false);
 
@@ -20,10 +20,10 @@ export const AirtableIntegration = ({ user, org, integrationParams, setIntegrati
             const formData = new FormData();
             formData.append('user_id', user);
             formData.append('org_id', org);
-            const response = await axios.post(`http://localhost:8000/integrations/airtable/authorize`, formData);
+            const response = await axios.post(`http://localhost:8000/integrations/hubspot/authorize`, formData);
             const authURL = response?.data;
 
-            const newWindow = window.open(authURL, 'Airtable Authorization', 'width=600, height=600');
+            const newWindow = window.open(authURL, 'HubSpot Authorization', 'width=600, height=600');
 
             // Polling for the window to close
             const pollTimer = window.setInterval(() => {
@@ -44,12 +44,12 @@ export const AirtableIntegration = ({ user, org, integrationParams, setIntegrati
             const formData = new FormData();
             formData.append('user_id', user);
             formData.append('org_id', org);
-            const response = await axios.post(`http://localhost:8000/integrations/airtable/credentials`, formData);
+            const response = await axios.post(`http://localhost:8000/integrations/hubspot/credentials`, formData);
             const credentials = response.data; 
             if (credentials) {
                 setIsConnecting(false);
                 setIsConnected(true);
-                setIntegrationParams(prev => ({ ...prev, credentials: credentials, type: 'Airtable' }));
+                setIntegrationParams(prev => ({ ...prev, credentials: credentials, type: 'HubSpot' }));
             }
             setIsConnecting(false);
         } catch (e) {
@@ -92,12 +92,12 @@ export const AirtableIntegration = ({ user, org, integrationParams, setIntegrati
                         : '1px solid rgba(99, 115, 180, 0.1)',
                 }}
             >
-                📊
+                🔶
             </Box>
 
             {!isConnected && (
                 <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8rem', textAlign: 'center' }}>
-                    Authorize access to your Airtable bases
+                    Authorize access to your HubSpot CRM
                 </Typography>
             )}
 
@@ -105,7 +105,7 @@ export const AirtableIntegration = ({ user, org, integrationParams, setIntegrati
                 variant="contained"
                 onClick={isConnected ? () => {} : handleConnectClick}
                 disabled={isConnecting}
-                id="airtable-connect-btn"
+                id="hubspot-connect-btn"
                 sx={{
                     minWidth: 200,
                     py: 1.2,
@@ -128,7 +128,7 @@ export const AirtableIntegration = ({ user, org, integrationParams, setIntegrati
                 {isConnected ? (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <span>✓</span>
-                        <span>Airtable Connected</span>
+                        <span>HubSpot Connected</span>
                     </Box>
                 ) : isConnecting ? (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -136,7 +136,7 @@ export const AirtableIntegration = ({ user, org, integrationParams, setIntegrati
                         <span>Connecting…</span>
                     </Box>
                 ) : (
-                    'Connect to Airtable'
+                    'Connect to HubSpot'
                 )}
             </Button>
         </Box>
