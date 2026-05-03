@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import {
     Box,
     Button,
-    CircularProgress
+    CircularProgress,
+    Typography,
 } from '@mui/material';
 import axios from 'axios';
 
@@ -20,7 +21,6 @@ export const NotionIntegration = ({ user, org, integrationParams, setIntegration
             formData.append('user_id', user);
             formData.append('org_id', org);
             const response = await axios.post(`http://localhost:8000/integrations/notion/authorize`, formData);
-            console.log(response);
             const authURL = response?.data;
 
             const newWindow = window.open(authURL, 'Notion Authorization', 'width=600, height=600');
@@ -59,29 +59,86 @@ export const NotionIntegration = ({ user, org, integrationParams, setIntegration
     }
 
     useEffect(() => {
-        setIsConnected(integrationParams?.credentials ? true : false)
+        // Reset connection state when component mounts (integration type changed)
+        setIsConnected(false);
+        setIsConnecting(false);
     }, []);
 
     return (
-        <>
-        <Box sx={{mt: 2}}>
-            Parameters
-            <Box display='flex' alignItems='center' justifyContent='center' sx={{mt: 2}}>
-                <Button 
-                    variant='contained' 
-                    onClick={isConnected ? () => {} :handleConnectClick}
-                    color={isConnected ? 'success' : 'primary'}
-                    disabled={isConnecting}
-                    style={{
-                        pointerEvents: isConnected ? 'none' : 'auto',
-                        cursor: isConnected ? 'default' : 'pointer',
-                        opacity: isConnected ? 1 : undefined
-                    }}
-                >
-                    {isConnected ? 'Notion Connected' : isConnecting ? <CircularProgress size={20} /> : 'Connect to Notion'}
-                </Button>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 2,
+                py: 1,
+            }}
+        >
+            <Box
+                sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: '12px',
+                    background: isConnected
+                        ? 'rgba(34, 197, 94, 0.1)'
+                        : 'rgba(88, 101, 242, 0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem',
+                    transition: 'all 400ms ease',
+                    border: isConnected
+                        ? '1px solid rgba(34, 197, 94, 0.2)'
+                        : '1px solid rgba(99, 115, 180, 0.1)',
+                }}
+            >
+                📝
             </Box>
+
+            {!isConnected && (
+                <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8rem', textAlign: 'center' }}>
+                    Authorize access to your Notion workspace
+                </Typography>
+            )}
+
+            <Button 
+                variant="contained"
+                onClick={isConnected ? () => {} : handleConnectClick}
+                disabled={isConnecting}
+                id="notion-connect-btn"
+                sx={{
+                    minWidth: 200,
+                    py: 1.2,
+                    pointerEvents: isConnected ? 'none' : 'auto',
+                    cursor: isConnected ? 'default' : 'pointer',
+                    background: isConnected
+                        ? 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)'
+                        : 'linear-gradient(135deg, #5865f2 0%, #7c3aed 100%)',
+                    '&:hover': {
+                        background: isConnected
+                            ? 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)'
+                            : 'linear-gradient(135deg, #6c78f5 0%, #8b5cf6 100%)',
+                        boxShadow: isConnected
+                            ? '0 4px 20px rgba(34, 197, 94, 0.25)'
+                            : '0 4px 20px rgba(88, 101, 242, 0.25)',
+                    },
+                    opacity: isConnected ? 1 : undefined,
+                }}
+            >
+                {isConnected ? (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <span>✓</span>
+                        <span>Notion Connected</span>
+                    </Box>
+                ) : isConnecting ? (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <CircularProgress size={18} sx={{ color: 'rgba(255,255,255,0.8)' }} />
+                        <span>Connecting…</span>
+                    </Box>
+                ) : (
+                    'Connect to Notion'
+                )}
+            </Button>
         </Box>
-      </>
     );
 }

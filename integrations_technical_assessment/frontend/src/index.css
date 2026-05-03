@@ -1,13 +1,160 @@
-body {
+/* ═══════════════════════════════════════════════════════════════
+   VectorShift Integration Hub — Design System
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Core palette */
+  --bg-primary: #06080f;
+  --bg-secondary: #0c1022;
+  --bg-card: rgba(14, 19, 39, 0.65);
+  --bg-card-hover: rgba(20, 27, 55, 0.75);
+  --bg-input: rgba(12, 16, 34, 0.8);
+  
+  /* Glass */
+  --glass-border: rgba(99, 115, 180, 0.15);
+  --glass-border-hover: rgba(120, 140, 220, 0.28);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --glass-glow: 0 0 60px rgba(88, 101, 242, 0.08);
+  
+  /* Accent */
+  --accent-primary: #5865f2;
+  --accent-primary-hover: #6c78f5;
+  --accent-gradient: linear-gradient(135deg, #5865f2 0%, #8b5cf6 50%, #a855f7 100%);
+  --accent-gradient-subtle: linear-gradient(135deg, rgba(88, 101, 242, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%);
+  --accent-success: #22c55e;
+  --accent-success-glow: rgba(34, 197, 94, 0.15);
+  --accent-warning: #f59e0b;
+  --accent-danger: #ef4444;
+  
+  /* Text */
+  --text-primary: #e8ecf4;
+  --text-secondary: #8b93a8;
+  --text-muted: #555d74;
+  --text-accent: #a5b4fc;
+  
+  /* Spacing */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated background gradient */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(88, 101, 242, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 85%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 30% at 50% 50%, rgba(168, 85, 247, 0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: ambientShift 20s ease-in-out infinite alternate;
+}
+
+@keyframes ambientShift {
+  0% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0.8; transform: scale(1); }
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'JetBrains Mono', 'Fira Code', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 115, 180, 0.25);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 115, 180, 0.4);
+}
+
+/* ── Animations ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 600px;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(34, 197, 94, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.35); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
